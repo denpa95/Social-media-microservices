@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  api-gateway:
+    build: ./APIGateway
+    ports: -"3000:3000"
+    env_file: ./APIGateway/.env
+    depends_on: -redis
+    environment: -REDIS_URL=redis://localhost:6379
+
+  identity-microservice:
+    build: ./IdentityMicroservice
+    env_files: ./IdentityMicroservice/.env
+    depends_on: -redis
+    environment: -REDIS_URL=redis://localhost:6379
+
+  media-microservice:
+    build: ./MediaMicroservice
+    env_files: ./MediaMicroservice/.env
+    depends_on: -redis
+      -rabbitmq
+    environment: -REDIS_URL=redis://localhost:6379
+      -RABBITMQ_URL=amqp://localhost:5672
+
+  search-microservice:
+    build: ./PostSearchMicroservice
+    env_files: ./PostSearchMicroservice/.env
+    depends_on: -redis
+      -rabbitmq
+    environment: -REDIS_URL=redis://localhost:6379
+      -RABBITMQ_URL:amqp://localhost:5672
+
+  post-microservice:
+    build: ./PostSearchMicroservice
+    env_files: ./PostSearchMicroservice/.env
+    depends_on: -redis
+      -rabbitmq
+    environment: -REDIS_URL=redis://localhost:6379
+      -RABBITMQ_URL=amqp://localhost:5672
+
+  redis:
+    image: redis:alpine
+    ports: -"6379:6379"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports: -"5672:5672"
+      -"15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5

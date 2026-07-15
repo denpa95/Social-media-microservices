@@ -1,0 +1,7 @@
+node_modules
+.env
+*.log
+*.txt
+testing.js
+testing2.js
+redis-script.js
