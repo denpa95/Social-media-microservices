@@ -1,4 +1,4 @@
-# Use the official node.js 18 image with alpine linux as the base image
+# Use the official node.js 18 with alpine linux as the base image
 FROM node:18-alpine
 
 WORKDIR /usr/src/app

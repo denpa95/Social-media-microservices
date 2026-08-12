@@ -1,4 +1,3 @@
-# Use the official node.js 18 image with alpine linux as the base image
 FROM node:18-alpine
 
 WORKDIR /usr/src/app
@@ -11,4 +10,5 @@ COPY . .
 
 EXPOSE 3003
 
-CMD [ "node", "src/media-service-server.js" ]
+CMD ["node", "src/media-service-server.js"]
+
