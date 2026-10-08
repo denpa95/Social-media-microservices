@@ -21,9 +21,15 @@ The project consists of 5 microservices, each running independently:
 - Redis - caching and rate-limiting to reduce latency and increase security
 
 # Architecture Diagram
+ 
 
-Client -> API-Gateway -> - Identity-microservice  
- - Post-microservice - Media-microservice - Search-microservice
+				       --- Identity-microservice
+				       |
+				       --- (authentication) ---> Post-microservice    ---
+Client --> request --> API-Gateway --> |					        |
+				       --- (authentication) ---> Media-microservice   --- RabbitMQ as message broker
+				       |					        |
+				       --- (authentication) ---> Search-microservice  ---
 
 # Tech Stack
 
