@@ -6,6 +6,7 @@ let channel = null;
 
 const EXCHANGE_NAME = "facebook_events";
 
+/*
 async function connectToRabbitMQ() {
   try {
     connection = await amqp.connect(process.env.RABBITMQ_URL);
@@ -14,6 +15,27 @@ async function connectToRabbitMQ() {
     logger.info("Successfully connected to RabbitMQ");
   } catch (error) {
     logger.error(`Error connecting to RabbitMQ server: ${error}`);
+  }
+} */
+
+async function connectToRabbitMQ() {
+  try {
+    while (true) {
+      console.log(
+        `Waiting for RabbitMQ to perform healthchecks and successfully start.`,
+      );
+      await new Promise((res) => setTimeout(res, 15000));
+      connection = await amqp.connect(process.env.RABBITMQ_URL);
+      channel = await connection.createChannel();
+      await channel.assertExchange(EXCHANGE_NAME, "topic", { durable: false });
+      logger.info("Successfully connected to RabbitMQ");
+      break;
+    }
+  } catch (error) {
+    logger.error(`Error connecting to RabbitMQ: ${error}`);
+    if (error.stack.includes("ECONNREFUSED")) {
+      console.log(`Retrying connection...`);
+    }
   }
 }
 

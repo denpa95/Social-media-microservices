@@ -4,7 +4,8 @@
   "main": "identity-service-server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/identity-service-server.js"
+    "dev": "nodemon src/identity-service-server.js",
+    "start": "node src/identity-service-server.js"
   },
   "keywords": [],
   "author": "",

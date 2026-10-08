@@ -17,6 +17,7 @@ router.post(
   (req, res, next) => {
     //Implement multer error-handling
     upload(req, res, function (err) {
+      //If error from multer
       if (err instanceof multer.MulterError) {
         logger.error(`Error uploading file through multer: ${err}`);
         return res.status(400).json({
@@ -40,6 +41,7 @@ router.post(
           message: "File was not attached to request! File upload failed.",
         });
       }
+      console.log("File uploaded successfully through multer.")
       next();
     });
   },

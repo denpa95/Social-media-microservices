@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/media-service-server.js"
+    "dev": "nodemon src/media-service-server.js",
+    "start": "node src/media-service-server.js"
   },
   "keywords": [],
   "author": "",

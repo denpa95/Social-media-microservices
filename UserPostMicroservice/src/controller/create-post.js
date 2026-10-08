@@ -33,6 +33,7 @@ const createPost = async (req, res, next) => {
     await res.status(201).json({
       "Request status": "Success",
       message: "Successfully created new post",
+      postId: newPost._id,
     });
   } catch (error) {
     logger.error(`Error creating new post: ${error}`);

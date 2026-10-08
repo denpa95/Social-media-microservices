@@ -1,4 +1,8 @@
-require("dotenv").config();
+if (process.env.NODE_ENV === "development") {
+  require("dotenv").config();
+}
+
+//require("dotenv").config();
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
@@ -43,7 +47,6 @@ app.use(errorHandler);
     await connectToRabbitMQ();
     //Consume post deletion event
     await consumeEvent("post:deleted", handlePostDeletion);
-
     //Start media microservice server
     app.listen(port, () => {
       logger.info(

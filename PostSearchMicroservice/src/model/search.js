@@ -26,7 +26,8 @@ const searchPostSchema = new Schema(
   { timestamps: true },
 );
 
-searchPostSchema.index({ content: "text" });
+// Create text index with no "stop-word" filtering
+searchPostSchema.index({ content: "text" }, { default_language: "none" });
 searchPostSchema.index({ createdAt: -1 });
 
 const Search = mongoose.model("Search", searchPostSchema);

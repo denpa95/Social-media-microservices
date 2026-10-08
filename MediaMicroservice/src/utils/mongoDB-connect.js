@@ -3,6 +3,7 @@ const logger = require("./winston-logger");
 
 const connectToMongoDB = async () => {
   logger.info("Media microservice is attempting a connection to MongoDB....");
+  console.log(process.env.MONGODB_URI);
   try {
     await mongoose.connect(process.env.MONGODB_URI);
     logger.info("Media microservice is now successfully connected to MongoDB.");

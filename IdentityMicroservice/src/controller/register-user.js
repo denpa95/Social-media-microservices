@@ -1,6 +1,5 @@
 const User = require("../models/user");
 const { validateRegistrationData } = require("../utils/user-data-validation");
-const generateTokens = require("../utils/generate-token");
 const logger = require("../utils/winston-logger");
 
 const registerUser = async (req, res, next) => {

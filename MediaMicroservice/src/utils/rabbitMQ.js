@@ -8,18 +8,28 @@ const EXCHANGE_NAME = "facebook_events";
 
 //Make connection to RabbitMQ server and create a channel
 async function connectToRabbitMQ() {
-  try {
-    //Connect to RabbitMQ server, create a channel then assertExchange
-    connection = await amqp.connect(process.env.RABBITMQ_URL);
-    channel = await connection.createChannel();
-    await channel.assertExchange(EXCHANGE_NAME, "topic", {
-      durable: false,
-    });
-    logger.info("Successfully connected to RabbitMQ server");
-  } catch (error) {
-    logger.error(`Error connecting to RabbitMQ server: ${error}`);
+  while (true) {
+    try {
+      connection = await amqp.connect(process.env.RABBITMQ_URL);
+      channel = await connection.createChannel();
+      await channel.assertExchange(EXCHANGE_NAME, "topic", {
+        durable: false,
+      });
+      logger.info("Successfully connected to RabbitMQ server.");
+      // Break from loop once connection is successful
+      break;
+    } catch (error) {
+      logger.error(`Error connecting to RabbitMQ: ${error}`);
+      logger.error("Retrying connecting to RabbitMQ in 15 seconds");
+      // Promise to delay next connection attempt by 5 seconds
+      await new Promise((res) => {
+        setTimeout(res, 15000);
+      });
+    }
   }
 }
+
+
 
 async function publishEvent(routingKey, message) {
   //If not channel detected, reconnect to RabbitMQ
@@ -36,6 +46,9 @@ async function publishEvent(routingKey, message) {
 
 async function consumeEvent(routingKey, eventHandler) {
   if (!channel) {
+    console.log(
+      "No channel is found to listen to incoming event from Post microservice",
+    );
     await connectToRabbitMQ();
   }
   //Assert/create a temporary queue for consumption

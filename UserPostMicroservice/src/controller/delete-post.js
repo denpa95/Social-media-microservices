@@ -28,13 +28,13 @@ const deletePost = async (req, res, next) => {
           "Post with the given ID doesn't exist or might have been deleted.",
       });
     }
-    //Publish event to Media microservice to delete all media related to this post. Routing key: "post:deleted"
+    //Publish event to Media-microservice/Search-microservice to delete all medias related to deleted post and remove post from search service
     await publishEvent("post:deleted", {
       postId: post._id.toString(),
       userId: userId,
       mediaIds: post.mediaIds,
     });
-    //Delete all data from cache
+    //Delete all data from cache to prevent deleted post from appearing in GET requests
     await invalidateCache(req, post._id.toString());
     res.json({
       "Request status": "Success",

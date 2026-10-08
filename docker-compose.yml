@@ -1,77 +1,95 @@
 services:
   api-gateway:
-    build: ./APIGateway
-    image: api-gateway:1.0
+    build: ./APIGateway #File path relative to .yaml file
+    image: api-gateway:1.0 #Image name
     ports: 
-      -"3000:3000"
+      - "3000:3000" #HOST:CONTAINER
     env_file: ./APIGateway/.env
-    depends_on: 
-      -redis
-    environment:
-      -REDIS_URL=redis://localhost:6379
+    depends_on:
+      redis:
+        condition: service_started
+    environment: #Overrides env_file and is used to only reveal secrets keys and URLs
+      - REDIS_URL=redis://redis:6379
+      #URL for services below are used for proxying and forwarding requests to other microservices
+      - IDENTITY_SERVICE_URL=http://identity-service:3001
+      - POST_SERVICE_URL=http://user-post-service:3002
+      - MEDIA_SERVICE_URL=http://media-service:3003
+      - SEARCH_SERVICE_URL=http://post-search-service:3004
 
   identity-service:
     build: ./IdentityMicroservice
     image: identity-microservice:1.0
-    ports: 
-      -"3001:3001"
+    ports:
+    # "HOST:CONTAINER"
+      #- "3001:3001"
+      - "3020:3001"
     env_file: ./IdentityMicroservice/.env
-    depends_on: 
-      -redis
-    environment: 
-      -REDIS_URL=redis://localhost:6379
+    depends_on:
+      redis:
+        condition: service_started
+    environment:
+      - REDIS_URL=redis://redis:6379
 
   media-service:
     build: ./MediaMicroservice
     image: media-microservice:1.0
-    ports: 
-      -"3003:3003"
+    ports:
+      - "3003:3003"
     env_file: ./MediaMicroservice/.env
-    depends_on: 
-      -redis
-      -rabbitmq
-    environment: 
-      -REDIS_URL=redis://localhost:6379
-      -RABBITMQ_URL=amqp://localhost:5672
+    depends_on:
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+      - MONGODB_URI=mongodb+srv://santimarez_95:santimarez_95@nodejs-microservices-cl.qexfclp.mongodb.net/
+      - NODE_ENV=production
 
   post-search-service:
-    build: ./PostSearchMicroservice/.env
+    build: ./PostSearchMicroservice
     image: post-search-microservice:1.0
-    ports: 
-      -"3002:3002"
+    ports:
+      - "3004:3004"
     env_file: ./PostSearchMicroservice/.env
-    depends_on: 
-      -redis
-      -rabbitmq
-    environment: 
-      -REDIS_URL=redis://localhost:6379
-      -RABBITMQ_URL=amqp://localhost:5672
+    depends_on:
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+      - MONGODB_URI=mongodb+srv://santimarez_95:santimarez_95@nodejs-microservices-cl.qexfclp.mongodb.net/
 
   user-post-service:
     build: ./UserPostMicroservice
     image: user-post-service:1.0
-    ports: 
-      -"3002:3002"
+    ports:
+      - "3002:3002"
     env_file: ./UserPostMicroservice/.env
-    depends_on: 
-      -redis
-      -rabbitmq
-    environment: 
-      -REDIS_URL=redis://localhost:6379
-      -RABBITMQ_URL=amqp://localhost:5672
+    depends_on:
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://rabbitmq:5672
 
   redis:
     image: redis:alpine
-    ports: 
-      -"6379:6379"
+    ports:
+      - "6379:6379"
 
   rabbitmq:
     image: rabbitmq:3-management
-    ports: 
-      -"5672:5672"
-      -"15672:15673"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
-      interval: 30s
+      interval: 5s
       timeout: 10s
       retries: 5

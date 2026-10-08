@@ -7,8 +7,9 @@ const handlePostDeletion = async (event, redisClient) => {
     const { postId } = event;
     const post = await Search.findOneAndDelete({ postId: postId });
     await invalidateSearchCache(redisClient);
+    console.log(post);
     logger.info(
-      `Successfully deleted post ${post._id} from search service.`,
+      `Successfully deleted post ${post.postId} from search service.`,
     );
   } catch (error) {
     logger.error(`Error handling post deletion: ${error}`);

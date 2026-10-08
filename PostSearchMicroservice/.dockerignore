@@ -1,0 +1,13 @@
+# Exclude all node_module files
+node_modules
+
+# Exclude .env files to prevent secrets keys and URLs from being exposed. Env variables will be injected from Compose during runtime
+.env
+.env.example
+
+# Exclude all log files and README file from build context
+.log
+.md
+
+# Exclude script files
+text-index-fix.js

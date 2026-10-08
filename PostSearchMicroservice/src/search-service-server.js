@@ -1,4 +1,7 @@
-require("dotenv").config();
+if (process.env.NODE_ENV === "development") {
+  require("dotenv").config();
+}
+//require("dotenv").config();
 const express = require("express");
 const app = express();
 const port = process.env.port || 3004;
@@ -16,6 +19,7 @@ const router = require("./search-service-router/search-service-router");
 const { connectToRabbitMQ, consumeEvent } = require("./utils/rabbitMQ");
 const handlePostCreation = require("./events/handle-post-creation");
 const handlePostDeletion = require("./events/handle-post-deletion");
+
 connectToMongoDB();
 
 app.use(helmet());
@@ -34,9 +38,10 @@ app.use(
 
 (async function () {
   try {
-    logger.info(`Connecting to RabbitMQ server..`);
+    //logger.info(`Connecting to RabbitMQ server..`);
     await connectToRabbitMQ();
     logger.info(`Listening to post related events.`);
+    //Server is now listening to "post:created"/"post:deleted" event to delete post searh from database
     await consumeEvent("post:created", (event) => {
       handlePostCreation(event, redisClient);
     });

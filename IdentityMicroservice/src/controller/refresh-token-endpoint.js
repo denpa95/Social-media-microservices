@@ -22,7 +22,6 @@ const refreshTokenEndpoint = async (req, res, next) => {
 
     //Destructure refresh token from request body.
     const { refreshToken } = req.body;
-
     //Check if given refresh token exist or has expired.
     const token = await RefreshToken.findOne({ token: refreshToken });
     if (!token || token.expiresAt < new Date()) {
@@ -37,18 +36,18 @@ const refreshTokenEndpoint = async (req, res, next) => {
     const user = await User.findById(token.user);
 
     //Create new access/refresh token for user and destructure the tokens.
+    //Destructure order:const {objectProperty: localVariable} = object
     const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
       await generateTokens(user);
-
     //Delete current refreshToken
     await RefreshToken.findByIdAndDelete(token._id);
-
     //Send new tokens in response to user.
     res.status(201).json({
       "Request status": "Success",
       message: "New access token and refresh token generated.",
       accessToken: newAccessToken,
       refreshToken: newRefreshToken,
+      userId: user._id,
     });
   } catch (error) {
     logger.error("Error performing token validation/renewal", error);
