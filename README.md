@@ -39,6 +39,8 @@ The project consists of 5 microservices, each running independently:
                                                                    |                                       |
                                                              Search-service -------------------------------
 
+Redis (cache)
+MongoDB (storage)
 
                    
 # Tech Stack
