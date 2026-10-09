@@ -94,12 +94,12 @@ Each microservices has it's own README file:
 
 # Environment Variables 
 
-- MONGODB_URI = mongodb+srv://santimarez_95:santimarez_95@nodejs-microservices-cl.qexfclp.mongodb.net/
+- MONGODB_URI = {{MongoDB URL}}
 - RABBITMQ_URL = amqp://localhost:5672
 - REDIS_URL = redis://localhost:6379
-- CLOUD_NAME = dfivkrfxg
-- CLOUDINARY_API_KEY = 941144463585139
-- CLOUDINARY_API_SECRET = X6SS9UiCYrkMhiGPUeJvnQMEs9Y
+- CLOUD_NAME = {{Cloudinary cloud name}}
+- CLOUDINARY_API_KEY = {{Cloudinary API key}}
+- CLOUDINARY_API_SECRET = {{Cloudinary API secret}}
 - API_ENV_VAR = CLOUDINARY_URL=cloudinary://941144463585139:X6SS9UiCYrkMhiGPUeJvnQMEs9Y@dfivkrfxg
 
 # Folder Structure
@@ -153,6 +153,6 @@ microservice/
 - Start a container with the rabbitmq:3-management image `docker run -rm rabbitmq:3-management`
 - RabbitMQ starts successfully in 27 seconds without any error
 
-## Start rabbitmq service in compose stack
-- Start rabbitmq service `docker compose up rabbitmq --build`
+## Start rabbitmq service in compose project
+- Start rabbitmq service `docker compose up rabbitmq --build` separately before starting other services
 - RabbitMQ starts normally
