@@ -22,15 +22,25 @@ The project consists of 5 microservices, each running independently:
 
 # Architecture Diagram
  
+														                       Client
+                                                      |
+                                                      |                      
+                            -------------------- API Gateway -----------------------------------------------
+                           |                          |                          |                         |
+                           |                          |                          |                         |
+                   Identity-service         User authentication        User authentication       User authentication
+                                                      |                          |                         |
+                                                      |                          |                         |
+                                                 Post service               Media-service                  |
+                                                      |                          |                         |
+                                                      |                          |                         |
+                                                       -------- RabbitMQ --------                          |
+                                                                   |                                       |
+                                                                   |                                       |
+                                                             Search-service -------------------------------
 
-				       --- Identity-microservice
-				       |
-				       --- (authentication) ---> Post-microservice    ---
-Client --> request --> API-Gateway --> |					        |
-				       --- (authentication) ---> Media-microservice   --- RabbitMQ as message broker
-				       |					        |
-				       --- (authentication) ---> Search-microservice  ---
 
+                   
 # Tech Stack
 
 - Node.js
