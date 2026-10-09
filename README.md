@@ -22,7 +22,7 @@ The project consists of 5 microservices, each running independently:
 
 # Architecture Diagram
  
-														                       Client
+													Client
                                                       |
                                                       |                      
                             -------------------- API Gateway -----------------------------------------------
